@@ -1,9 +1,8 @@
-// routes/candidateRoutes.js
 const express = require("express");
 const router = express.Router();
-const Candidate = require("../models/Candidates"); // your candidate schema
+const Candidate = require("../models/Candidates");
 
-// POST /api/candidates/add
+// Route to add candidates
 router.post("/add", async (req, res) => {
   try {
     const { candidates } = req.body;
@@ -30,7 +29,7 @@ router.post("/add", async (req, res) => {
           position,
           name,
           image,
-          votes: 0, // default votes
+          voteCount: 0,
         });
 
         await newCandidate.save();
@@ -38,35 +37,42 @@ router.post("/add", async (req, res) => {
       }
     }
 
-    res
-      .status(201)
-      .json({ message: "All candidates added", candidates: allNewCandidates });
+    res.status(201).json({
+      message: "All candidates added successfully",
+      candidates: allNewCandidates,
+    });
   } catch (err) {
     console.error("Error adding candidates:", err);
     res.status(500).json({ error: "Server error" });
   }
 });
 
+// Route to get grouped candidates with vote counts
 router.get("/grouped", async (req, res) => {
   try {
-    const candidates = await Candidate.find();
+    const candidates = await Candidate.find().select(
+      "name image position voteCount"
+    );
 
-    // Grouping logic
     const grouped = {};
     candidates.forEach((candidate) => {
       const pos = candidate.position;
       if (!grouped[pos]) {
         grouped[pos] = [];
       }
-      grouped[pos].push(candidate);
+      grouped[pos].push({
+        _id: candidate._id,
+        name: candidate.name,
+        image: candidate.image,
+        votes: candidate.voteCount,
+      });
     });
 
     res.status(200).json(grouped);
   } catch (err) {
-    console.error(err);
+    console.error("Error fetching grouped candidates:", err);
     res.status(500).json({ error: "Failed to fetch candidates" });
   }
 });
-
 
 module.exports = router;

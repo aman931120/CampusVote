@@ -15,6 +15,7 @@ import Admin from "./components/Admin/Admin.jsx";
 import AddCandidate from "./components/Candidate/AddCandidate.jsx";
 import StudentElection from "./components/Election/StudentElection.jsx";
 import ResultPage from "./components/Result/ResultPage.jsx";
+import ManageCandidates from "./components/Candidate/ManageCandidates.jsx";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -23,6 +24,7 @@ const router = createBrowserRouter(
       <Route path="/student" element={<Student />} />
       <Route path="/admin" element={<Admin />} />
       <Route path="/admin/addCandidate" element={<AddCandidate />} />
+      <Route path="/admin/manageCandidates" element={<ManageCandidates />} />
       <Route path="/student/StudentElection" element={<StudentElection />} />
       <Route path="/admin/result" element={<ResultPage />} />
     </Route>

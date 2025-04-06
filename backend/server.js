@@ -35,6 +35,9 @@ app.use("/api/candidates", candidateRoutes);
 const voteRoute = require("./routes/vote");
 app.use('/api/vote', voteRoute); // Now your frontend can POST to /api/vote
 
+const electionRoutes = require("./routes/election");
+app.use("/api/election", electionRoutes);
+
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));

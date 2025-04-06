@@ -17,6 +17,10 @@ const candidateSchema = new mongoose.Schema({
     type: Number,
     default: 0,
   },
+  electionId: {
+    type: Number,
+    required: true,
+  },
 });
 
 module.exports = mongoose.model("Candidate", candidateSchema);

@@ -25,6 +25,10 @@ const AddCandidate = () => {
     navigate("/admin/Result");
   };
 
+  const goToManageCandidates = () => {
+    navigate("/admin/manageCandidates");
+  };
+
   const addPosition = () => {
     if (currentPosition.trim() && !positions.includes(currentPosition)) {
       setPositions([...positions, currentPosition]);
@@ -72,12 +76,10 @@ const AddCandidate = () => {
     }
   };
 
-  // ✅ Send all candidates in one go
   const handleSaveCandidates = async () => {
     try {
       for (const position of positions) {
         const candidateList = candidates[position];
-
         for (const candidate of candidateList) {
           if (!candidate.name || !candidate.image) {
             alert(`Candidate missing name/image in position: ${position}`);
@@ -101,12 +103,18 @@ const AddCandidate = () => {
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-gray-500 p-6 relative">
-      <div className="flex justify-center gap-4 mb-6">
+      <div className="flex justify-center gap-4 mb-6 flex-wrap">
         <button
           onClick={goToResults}
           className="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition"
         >
           View Results
+        </button>
+        <button
+          onClick={goToManageCandidates}
+          className="px-6 py-3 bg-yellow-600 text-white rounded-lg hover:bg-yellow-700 transition"
+        >
+          Manage Candidates
         </button>
         <button
           onClick={handleLogout}
@@ -115,12 +123,12 @@ const AddCandidate = () => {
           Logout
         </button>
       </div>
+
       <div className="bg-white p-8 rounded-lg shadow-2xl w-full max-w-3xl">
         <h2 className="text-3xl font-bold text-center text-gray-800 mb-6">
           Add Candidates
         </h2>
 
-        {/* Position Input */}
         <div className="flex gap-4 mb-6">
           <input
             type="text"
@@ -137,7 +145,6 @@ const AddCandidate = () => {
           </button>
         </div>
 
-        {/* Positions and Candidate Inputs */}
         {positions.map((position, posIndex) => (
           <div
             key={posIndex}
@@ -196,7 +203,6 @@ const AddCandidate = () => {
           </div>
         ))}
 
-        {/* ✅ Save All Candidates Button */}
         {positions.length > 0 && (
           <button
             onClick={handleSaveCandidates}

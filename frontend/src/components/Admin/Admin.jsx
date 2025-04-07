@@ -18,9 +18,7 @@ const Admin = () => {
       });
 
       if (res.data.success) {
-        // ✅ Save login state
         localStorage.setItem("isAdminLoggedIn", "true");
-        // ✅ Redirect and replace history to block back button access
         navigate("/admin/addCandidate", { replace: true });
       }
     } catch (err) {
@@ -29,31 +27,35 @@ const Admin = () => {
   };
 
   return (
-    <div className="flex items-center justify-center h-screen bg-gray-500">
-      <div className="bg-white p-8 rounded-lg shadow-lg w-96">
-        <h2 className="text-4xl font-bold text-center mb-6">Admin Login</h2>
-        <form onSubmit={handleLogin}>
-          <div className="mb-4">
+    <div className="min-h-screen flex items-center justify-center bg-gray-500 px-4">
+      <div className="bg-white p-10 rounded-2xl shadow-2xl w-full max-w-md">
+        <h2 className="text-3xl font-extrabold text-center text-gray-8500 mb-6">
+          Admin Login
+        </h2>
+
+        <form onSubmit={handleLogin} className="space-y-5">
+          <div>
             <label
-              className="block text-gray-700 text-sm font-bold mb-2"
               htmlFor="email"
+              className="block text-sm font-semibold text-gray-700 mb-1"
             >
-              Email ID
+              Email Address
             </label>
             <input
               type="email"
               id="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="w-full px-4 py-2 border rounded-lg"
-              placeholder="Enter your email"
               required
+              placeholder="email"
+              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-400 focus:outline-none transition duration-200"
             />
           </div>
-          <div className="mb-6">
+
+          <div>
             <label
-              className="block text-gray-700 text-sm font-bold mb-2"
               htmlFor="password"
+              className="block text-sm font-semibold text-gray-700 mb-1"
             >
               Password
             </label>
@@ -62,21 +64,23 @@ const Admin = () => {
               id="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className="w-full px-4 py-2 border rounded-lg"
-              placeholder="Enter your password"
               required
+              placeholder="password"
+              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-400 focus:outline-none transition duration-200"
             />
           </div>
+
           {error && (
-            <p className="text-red-600 mb-4 text-center font-semibold">
+            <p className="text-red-600 text-center text-sm font-medium">
               {error}
             </p>
           )}
+
           <button
             type="submit"
-            className="w-full bg-blue-500 text-white py-2 rounded-lg hover:bg-blue-600"
+            className="w-full bg-blue-600 text-white py-2 rounded-lg font-semibold hover:bg-blue-700 transition duration-200"
           >
-            Submit
+            Login
           </button>
         </form>
       </div>

@@ -29,7 +29,7 @@ const ManageCandidates = () => {
   }, []);
 
   return (
-    <div className="p-10 bg-gray-500 mt-7">
+    <div className="p-10 bg-gray-500 mt-7 pl-70 pr-70">
       <h2 className="text-3xl font-bold mb-6 text-center">Manage Candidates</h2>
       {Object.keys(candidatesByPosition).map((position) => (
         <div key={position} className="mb-6 bg-gray-100 p-6 rounded-lg shadow">

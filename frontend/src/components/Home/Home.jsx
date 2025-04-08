@@ -20,7 +20,7 @@ const Home = () => {
       <div className="flex flex-1 items-center justify-center">
         <div className="bg-gray-200 p-10 rounded-2xl shadow-xl text-center w-full max-w-md">
           <h1 className="text-2xl md:text-3xl font-bold mb-10 text-gray-900">
-            College Voting System
+            CampusVote
           </h1>
 
           <div className="flex gap-6 justify-center">

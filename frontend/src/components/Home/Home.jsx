@@ -62,7 +62,7 @@ const Home = () => {
             {/* Nomination */}
             <div className="bg-white p-4 mr-5 rounded-xl shadow-md flex flex-col items-center w-32">
               <FaClipboardList size={60} className="text-gray-800 mb-2" />
-              <Link to="/nomination">
+              <Link to="/NomineeLogin">
                 <button className="bg-lime-300 text-black font-bold text-sm px-4 py-1 rounded-md hover:bg-lime-400">
                   Nomination
                 </button>

@@ -18,8 +18,8 @@ const candidateSchema = new mongoose.Schema({
     default: 0,
   },
   electionId: {
-    type: Number,
-    required: true,
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Election",
   },
 });
 

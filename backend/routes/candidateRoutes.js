@@ -13,6 +13,7 @@ router.post("/add", async (req, res) => {
     }
 
     // Fetch the latest election
+    // Fetch the latest election
     const currentElection = await Election.findOne().sort({ electionId: -1 });
     if (!currentElection) {
       return res.status(400).json({
@@ -20,7 +21,9 @@ router.post("/add", async (req, res) => {
       });
     }
 
-    const electionId = currentElection.electionId;
+    // 🔧 Correct line: use ObjectId
+    const electionId = currentElection._id;
+
     const allNewCandidates = [];
 
     for (const position in candidates) {
@@ -82,9 +85,11 @@ router.get("/grouped", async (req, res) => {
     });
 
     res.status(200).json(grouped);
-  } catch (err) {
-    console.error("Error fetching grouped candidates:", err);
-    res.status(500).json({ error: "Failed to fetch candidates" });
+  } catch (error) {
+    console.error("Error adding candidates:", error);
+    res
+      .status(500)
+      .json({ error: "Error adding candidates", details: error.message });
   }
 });
 

@@ -28,7 +28,7 @@ const Admin = () => {
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-500 px-4">
-      <div className="bg-white p-10 rounded-2xl shadow-2xl w-full max-w-md">
+      <div className="bg-gray-200 p-10 rounded-2xl shadow-2xl w-full max-w-md">
         <h2 className="text-3xl font-extrabold text-center text-gray-8500 mb-6">
           Admin Login
         </h2>
@@ -48,7 +48,7 @@ const Admin = () => {
               onChange={(e) => setEmail(e.target.value)}
               required
               placeholder="email"
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-400 focus:outline-none transition duration-200"
+              className="w-full px-4 py-2 border-2 border-gray-400 rounded-lg focus:ring-2 focus:ring-blue-400 focus:outline-none transition duration-200 "
             />
           </div>
 
@@ -66,7 +66,7 @@ const Admin = () => {
               onChange={(e) => setPassword(e.target.value)}
               required
               placeholder="password"
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-400 focus:outline-none transition duration-200"
+              className="w-full px-4 py-2 border-2 border-gray-400 rounded-lg focus:ring-2 focus:ring-blue-400 focus:outline-none transition duration-200"
             />
           </div>
 

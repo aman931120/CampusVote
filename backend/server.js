@@ -15,6 +15,7 @@ const candidateRoutes = require("./routes/candidateRoutes");
 const voteRoute = require("./routes/vote");
 const electionRoutes = require("./routes/election");
 const nomineeRoutes = require("./routes/nomineeRoute");
+const nominationRoutes = require("./routes/nominationRoutes");
 
 const app = express();
 
@@ -95,6 +96,9 @@ app.get("/api/admin/getPDF", async (req, res) => {
   }
 });
 
+
+
+
 // ✅ Other routes
 app.use("/api", adminRoutes);
 app.use("/api/student", studentRoutes);
@@ -102,6 +106,7 @@ app.use("/api/candidates", candidateRoutes);
 app.use("/api/vote", voteRoute);
 app.use("/api/election", electionRoutes);
 app.use("/api/nominee", nomineeRoutes); // ✅ MOUNT NOMINEE ROUTE
+app.use("/api/nomination", nominationRoutes);
 
 // ✅ Start server
 const PORT = process.env.PORT || 5000;

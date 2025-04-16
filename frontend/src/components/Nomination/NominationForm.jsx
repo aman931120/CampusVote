@@ -6,6 +6,7 @@ const NominationForm = () => {
   const navigate = useNavigate();
 
   const [name, setName] = useState("");
+  const [rollNumber, setRollNumber] = useState(""); // 🔥 New state for roll number
   const [position, setPosition] = useState("");
   const [passoutYear, setPassoutYear] = useState("");
   const [email, setEmail] = useState("");
@@ -22,15 +23,22 @@ const NominationForm = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // Validate form data
-    if (!name || !position || !passoutYear || !email || !manifesto || !image) {
+    if (
+      !name ||
+      !rollNumber ||
+      !position ||
+      !passoutYear ||
+      !email ||
+      !manifesto ||
+      !image
+    ) {
       alert("Please fill all fields.");
       return;
     }
 
-    // Prepare FormData for file upload and other form data
     const formData = new FormData();
     formData.append("name", name);
+    formData.append("rollNumber", rollNumber); // ✅ Append roll number
     formData.append("position", position);
     formData.append("passoutYear", passoutYear);
     formData.append("email", email);
@@ -38,13 +46,12 @@ const NominationForm = () => {
     formData.append("image", image);
 
     try {
-      // Send POST request to submit nomination
       const response = await axios.post(
         "http://localhost:5000/api/nomination",
         formData,
         {
           headers: {
-            "Content-Type": "multipart/form-data", // Important for file uploads
+            "Content-Type": "multipart/form-data",
           },
         }
       );
@@ -52,6 +59,7 @@ const NominationForm = () => {
 
       // Reset form fields
       setName("");
+      setRollNumber(""); // 🔄 Reset roll number
       setPosition("");
       setPassoutYear("");
       setEmail("");
@@ -81,6 +89,18 @@ const NominationForm = () => {
                 className="w-full px-4 py-2 rounded-md border focus:outline-none focus:ring-2 focus:ring-blue-400"
               />
             </div>
+
+            <div>
+              <label className="block font-medium mb-1">Roll Number :</label>
+              <input
+                type="text"
+                value={rollNumber}
+                onChange={(e) => setRollNumber(e.target.value)}
+                required
+                className="w-full px-4 py-2 rounded-md border focus:outline-none focus:ring-2 focus:ring-blue-400"
+              />
+            </div>
+
             <div>
               <label className="block font-medium mb-1">Position :</label>
               <input
@@ -91,6 +111,7 @@ const NominationForm = () => {
                 className="w-full px-4 py-2 rounded-md border focus:outline-none focus:ring-2 focus:ring-blue-400"
               />
             </div>
+
             <div>
               <label className="block font-medium mb-1">Passout Year :</label>
               <input
@@ -101,6 +122,7 @@ const NominationForm = () => {
                 className="w-full px-4 py-2 rounded-md border focus:outline-none focus:ring-2 focus:ring-blue-400"
               />
             </div>
+
             <div>
               <label className="block font-medium mb-1">Email :</label>
               <input
@@ -111,6 +133,7 @@ const NominationForm = () => {
                 className="w-full px-4 py-2 rounded-md border focus:outline-none focus:ring-2 focus:ring-blue-400"
               />
             </div>
+
             <div>
               <label className="block font-medium mb-1">
                 Upload Manifesto :
@@ -122,6 +145,7 @@ const NominationForm = () => {
                 className="w-full px-4 py-2 rounded-md border file:bg-gray-300 file:border-0 file:px-4 file:py-2 file:rounded-md"
               />
             </div>
+
             <div>
               <label className="block font-medium mb-1">Upload Image :</label>
               <input
@@ -131,6 +155,7 @@ const NominationForm = () => {
                 className="w-full px-4 py-2 rounded-md border file:bg-gray-300 file:border-0 file:px-4 file:py-2 file:rounded-md"
               />
             </div>
+
             <button
               type="submit"
               className="bg-gray-300 text-black px-6 py-2 rounded-md mt-4 border hover:bg-gray-400 transition"

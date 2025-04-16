@@ -20,6 +20,7 @@ import Manifesto from "./components/Manifesto/Manifesto.jsx";
 import NomineeLogin from "./components/Nomination/NomineeLogin.jsx";
 import InstructionPage from "./components/Instructions/Instruction.jsx";
 import NominationForm from "./components/Nomination/NominationForm.jsx";
+import NominationCandidate from "./components/Candidate/NominationCandidate.jsx";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -32,6 +33,7 @@ const router = createBrowserRouter(
       <Route path="/NomineeLogin/NominationForm" element={<NominationForm />} />
       <Route path="/admin/addCandidate" element={<AddCandidate />} />
       <Route path="/admin/manageCandidates" element={<ManageCandidates />} />
+      <Route path="/admin/NominationCandidate" element={<NominationCandidate />} />
       <Route path="/student/StudentElection" element={<StudentElection />} />
       <Route path="/admin/result" element={<ResultPage />} />
       <Route path="/NomineeLogin/instructions" element={<InstructionPage />} />

@@ -46,7 +46,7 @@ router.post(
   async (req, res) => {
     try {
       // Extract form data and file paths
-      const { name, position, passoutYear, email } = req.body;
+      const { name, rollNumber, position, passoutYear, email } = req.body;
       const manifestoPath = req.files.manifesto
         ? req.files.manifesto[0].path
         : null;
@@ -55,6 +55,7 @@ router.post(
       // Validation for form fields
       if (
         !name ||
+        !rollNumber ||
         !position ||
         !passoutYear ||
         !email ||
@@ -62,13 +63,15 @@ router.post(
         !imagePath
       ) {
         return res.status(400).json({
-          error: "All fields are required, including manifesto and image.",
+          error:
+            "All fields are required, including roll number, manifesto and image.",
         });
       }
 
       // Create a new nominee object
       const newNominee = new Nominee({
         name,
+        rollNumber, // ✅ Added rollNumber
         position,
         passoutYear,
         email,

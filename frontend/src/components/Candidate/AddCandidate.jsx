@@ -39,6 +39,10 @@ const AddCandidate = () => {
     navigate("/admin/manageCandidates");
   };
 
+  const goToNominationCandidates = () => {
+    navigate("/admin/nominationCandidate");
+  };
+
   const addPosition = () => {
     if (currentPosition.trim() && !positions.includes(currentPosition)) {
       setPositions([...positions, currentPosition]);
@@ -153,6 +157,12 @@ const AddCandidate = () => {
           className="px-6 py-3 bg-yellow-600 text-white rounded-lg hover:bg-yellow-700"
         >
           Manage Candidates
+        </button>
+        <button
+          onClick={goToNominationCandidates}
+          className="px-6 py-3 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700"
+        >
+          See Nominee
         </button>
         <button
           onClick={toggleElection}

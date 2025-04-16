@@ -1,8 +1,35 @@
-import React from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom"; // <-- import this
+import axios from "axios"; // <-- import axios to make the API request
 
 const NomineeLogin = () => {
   const navigate = useNavigate(); // <-- initialize the hook
+  const [email, setEmail] = useState(""); // <-- state for email
+  const [password, setPassword] = useState(""); // <-- state for password
+
+  // Handle login form submission
+  const handleLogin = async (e) => {
+    e.preventDefault(); // Prevent the default form submission
+
+    try {
+      // Make API call to backend nominee login endpoint
+      const res = await axios.post("http://localhost:5000/api/nominee/login", {
+        email,
+        password,
+      });
+
+      // Save login state to localStorage (if successful)
+      localStorage.setItem("isNomineeLoggedIn", "true");
+      localStorage.setItem("nomineeEmail", res.data.email); // Assuming this is returned
+      localStorage.setItem("nomineeName", res.data.name); // Assuming this is returned
+
+      // Redirect to Nomination Form page
+      navigate("/NomineeLogin/NominationForm");
+    } catch (err) {
+      alert(err.response?.data?.message || "Login failed");
+    }
+  };
+
 
   return (
     <div className="min-h-screen bg-gray-700 pt-20">
@@ -24,7 +51,9 @@ const NomineeLogin = () => {
           </h2>
           <div className="bg-white p-6 rounded-lg shadow-md w-full max-w-md mx-auto">
             <h3 className="text-xl font-bold mb-4 text-center">Login</h3>
-            <form>
+            <form onSubmit={handleLogin}>
+              {" "}
+              {/* Added form submission handler */}
               <div className="mb-4">
                 <label className="block text-sm font-medium mb-1">
                   Email ID
@@ -33,6 +62,9 @@ const NomineeLogin = () => {
                   type="email"
                   placeholder="Enter your email"
                   className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  value={email} // Bind input value to email state
+                  onChange={(e) => setEmail(e.target.value)} // Update email state on change
+                  required
                 />
               </div>
               <div className="mb-4">
@@ -43,6 +75,9 @@ const NomineeLogin = () => {
                   type="password"
                   placeholder="Enter your password"
                   className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  value={password} // Bind input value to password state
+                  onChange={(e) => setPassword(e.target.value)} // Update password state on change
+                  required
                 />
               </div>
               <button

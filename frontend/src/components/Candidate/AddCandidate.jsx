@@ -8,6 +8,10 @@ const AddCandidate = () => {
   const [positions, setPositions] = useState([]);
   const [currentPosition, setCurrentPosition] = useState("");
   const [candidates, setCandidates] = useState({});
+  const [electionOn, setElectionOn] = useState(
+    localStorage.getItem("electionStatus") === "on"
+  );
+  const [pdfFile, setPdfFile] = useState(null);
 
   useEffect(() => {
     const isLoggedIn = localStorage.getItem("isAdminLoggedIn");
@@ -15,6 +19,12 @@ const AddCandidate = () => {
       navigate("/", { replace: true });
     }
   }, [navigate]);
+
+  const toggleElection = () => {
+    const newStatus = !electionOn;
+    setElectionOn(newStatus);
+    localStorage.setItem("electionStatus", newStatus ? "on" : "off");
+  };
 
   const handleLogout = () => {
     localStorage.removeItem("isAdminLoggedIn");
@@ -52,21 +62,19 @@ const AddCandidate = () => {
   };
 
   const removeCandidate = (position, index) => {
-    const updatedCandidates = candidates[position].filter(
-      (_, i) => i !== index
-    );
-    setCandidates({ ...candidates, [position]: updatedCandidates });
+    const updated = candidates[position].filter((_, i) => i !== index);
+    setCandidates({ ...candidates, [position]: updated });
   };
 
   const updateCandidate = (position, index, field, value) => {
-    const updatedCandidates = candidates[position].map((c, i) =>
+    const updated = candidates[position].map((c, i) =>
       i === index ? { ...c, [field]: value } : c
     );
-    setCandidates({ ...candidates, [position]: updatedCandidates });
+    setCandidates({ ...candidates, [position]: updated });
   };
 
-  const handleImageUpload = (position, index, event) => {
-    const file = event.target.files[0];
+  const handleImageUpload = (position, index, e) => {
+    const file = e.target.files[0];
     if (file) {
       const reader = new FileReader();
       reader.onloadend = () => {
@@ -97,28 +105,66 @@ const AddCandidate = () => {
       setCandidates({});
     } catch (error) {
       console.error(error);
-      alert("Error submitting candidates. Check console for details.");
+      alert("Error submitting candidates.");
+    }
+  };
+
+  const handleFileChange = (e) => {
+    setPdfFile(e.target.files[0]);
+  };
+
+  const handleUploadPDF = async () => {
+    if (!pdfFile) {
+      alert("Please select a PDF file first.");
+      return;
+    }
+
+    const formData = new FormData();
+    formData.append("pdf", pdfFile);
+
+    try {
+      const res = await axios.post(
+        "http://localhost:5000/api/admin/uploadPDF",
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
+      alert("PDF uploaded successfully!");
+    } catch (err) {
+      console.error(err);
+      alert("Failed to upload PDF.");
     }
   };
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen bg-gray-500 p-6 relative">
+    <div className="flex flex-col items-center justify-center min-h-screen bg-gray-500 p-6">
       <div className="flex justify-center gap-4 mb-6 flex-wrap">
         <button
           onClick={goToResults}
-          className="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition"
+          className="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
         >
           View Results
         </button>
         <button
           onClick={goToManageCandidates}
-          className="px-6 py-3 bg-yellow-600 text-white rounded-lg hover:bg-yellow-700 transition"
+          className="px-6 py-3 bg-yellow-600 text-white rounded-lg hover:bg-yellow-700"
         >
           Manage Candidates
         </button>
         <button
+          onClick={toggleElection}
+          className={`px-6 py-3 ${
+            electionOn ? "bg-green-600" : "bg-gray-600"
+          } text-white rounded-lg hover:opacity-90`}
+        >
+          {electionOn ? "Election: ON" : "Election: OFF"}
+        </button>
+        <button
           onClick={handleLogout}
-          className="px-6 py-3 bg-red-600 text-white rounded-lg hover:bg-red-700 transition"
+          className="px-6 py-3 bg-red-600 text-white rounded-lg hover:bg-red-700"
         >
           Logout
         </button>
@@ -132,7 +178,7 @@ const AddCandidate = () => {
         <div className="flex gap-4 mb-6">
           <input
             type="text"
-            className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
+            className="w-full px-4 py-2 border rounded-lg"
             placeholder="Enter position name"
             value={currentPosition}
             onChange={(e) => setCurrentPosition(e.target.value)}
@@ -211,6 +257,25 @@ const AddCandidate = () => {
             Save All Candidates
           </button>
         )}
+
+        {/* PDF Upload Section */}
+        <div className="mt-10 border-t pt-6">
+          <h3 className="text-xl font-semibold mb-3">
+            Upload Instructions PDF
+          </h3>
+          <input
+            type="file"
+            accept="application/pdf"
+            onChange={handleFileChange}
+            className="mb-3 w-full border px-3 py-2 rounded-lg"
+          />
+          <button
+            onClick={handleUploadPDF}
+            className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700"
+          >
+            Upload PDF
+          </button>
+        </div>
       </div>
     </div>
   );

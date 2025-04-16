@@ -5,8 +5,16 @@ import {
   FaFileAlt,
   FaClipboardList,
 } from "react-icons/fa";
+import { useEffect, useState } from "react";
 
 const Home = () => {
+  const [electionOn, setElectionOn] = useState(false);
+
+  useEffect(() => {
+    const status = localStorage.getItem("electionStatus");
+    setElectionOn(status === "on");
+  }, []);
+
   return (
     <div className="h-screen w-full bg-gray-600 flex flex-col">
       {/* Header */}
@@ -52,14 +60,23 @@ const Home = () => {
             {/* Student */}
             <div className="bg-white p-4 rounded-xl shadow-md flex flex-col items-center w-32">
               <FaUserFriends size={60} className="text-gray-800 mb-2" />
-              <Link to="/student">
-                <button className="bg-blue-600 text-white font-bold text-sm px-4 py-1 rounded-md hover:bg-blue-700">
-                  Student
+              {electionOn ? (
+                <Link to="/student">
+                  <button className="bg-blue-600 text-white font-bold text-sm px-4 py-1 rounded-md hover:bg-blue-700">
+                    Student
+                  </button>
+                </Link>
+              ) : (
+                <button
+                  className="bg-gray-400 text-white font-bold text-sm px-4 py-1 rounded-md cursor-not-allowed"
+                  disabled
+                >
+                  VotingOff
                 </button>
-              </Link>
+              )}
             </div>
 
-            {/* Nomination */}
+            {/* Nomination (Always Enabled) */}
             <div className="bg-white p-4 mr-5 rounded-xl shadow-md flex flex-col items-center w-32">
               <FaClipboardList size={60} className="text-gray-800 mb-2" />
               <Link to="/NomineeLogin">

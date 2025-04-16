@@ -1,6 +1,16 @@
-import React from "react";
+import React, { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 
 const NominationForm = () => {
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const isNomineeLoggedIn = localStorage.getItem("isNomineeLoggedIn");
+    if (!isNomineeLoggedIn) {
+      navigate("/NomineeLogin");
+    }
+  }, [navigate]);
+
   return (
     <div className="min-h-screen bg-gray-700 pt-20 px-4 flex items-center justify-center">
       <div className="bg-gray-200 rounded-lg p-8 shadow-md w-full max-w-5xl flex flex-col md:flex-row justify-between gap-8">

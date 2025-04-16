@@ -22,11 +22,13 @@ const NominationForm = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    // Validate form data
     if (!name || !position || !passoutYear || !email || !manifesto || !image) {
       alert("Please fill all fields.");
       return;
     }
 
+    // Prepare FormData for file upload and other form data
     const formData = new FormData();
     formData.append("name", name);
     formData.append("position", position);
@@ -36,8 +38,19 @@ const NominationForm = () => {
     formData.append("image", image);
 
     try {
-      const response = await axios.post("/api/nomination", formData);
+      // Send POST request to submit nomination
+      const response = await axios.post(
+        "http://localhost:5000/api/nomination",
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data", // Important for file uploads
+          },
+        }
+      );
       alert(response.data.message);
+
+      // Reset form fields
       setName("");
       setPosition("");
       setPassoutYear("");
@@ -45,7 +58,7 @@ const NominationForm = () => {
       setManifesto(null);
       setImage(null);
     } catch (err) {
-      console.error(err);
+      console.error("Error submitting nomination:", err);
       alert("Error submitting nomination.");
     }
   };

@@ -8,7 +8,7 @@ const fs = require("fs");
 // Storage engine for multer
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
-    const uploadDir = "uploads/"; // Make sure this directory exists
+    const uploadDir = "uploads/"; // Ensure this directory exists
     if (!fs.existsSync(uploadDir)) {
       fs.mkdirSync(uploadDir, { recursive: true });
     }
@@ -45,14 +45,18 @@ router.post(
   ]),
   async (req, res) => {
     try {
-      // Extract form data and file paths
+      // Extract form data
       const { name, rollNumber, position, passoutYear, email } = req.body;
-      const manifestoPath = req.files.manifesto
-        ? req.files.manifesto[0].path
-        : null;
-      const imagePath = req.files.image ? req.files.image[0].path : null;
 
-      // Validation for form fields
+      // Build public URL paths (not file system paths)
+      const manifestoPath = req.files.manifesto
+        ? `/uploads/${req.files.manifesto[0].filename}`
+        : null;
+      const imagePath = req.files.image
+        ? `/uploads/${req.files.image[0].filename}`
+        : null;
+
+      // Validate required fields
       if (
         !name ||
         !rollNumber ||
@@ -64,14 +68,14 @@ router.post(
       ) {
         return res.status(400).json({
           error:
-            "All fields are required, including roll number, manifesto and image.",
+            "All fields are required, including roll number, manifesto, and image.",
         });
       }
 
-      // Create a new nominee object
+      // Create and save the new nominee
       const newNominee = new Nominee({
         name,
-        rollNumber, // ✅ Added rollNumber
+        rollNumber,
         position,
         passoutYear,
         email,
@@ -79,7 +83,6 @@ router.post(
         image: imagePath,
       });
 
-      // Save the nominee to the database
       await newNominee.save();
       res.status(201).json({ message: "Nomination submitted successfully!" });
     } catch (err) {
@@ -90,5 +93,35 @@ router.post(
     }
   }
 );
+
+router.delete("/delete/:id", async (req, res) => {
+  try {
+    const nominee = await Nominee.findById(req.params.id);
+
+    if (!nominee) {
+      return res.status(404).json({ message: "Nominee not found" });
+    }
+
+    // Function to safely delete files
+    const deleteFile = (filePath) => {
+      const absolutePath = path.join(__dirname, "..", filePath);
+      if (fs.existsSync(absolutePath)) {
+        fs.unlinkSync(absolutePath);
+      }
+    };
+
+    // Delete image and manifesto files
+    if (nominee.image) deleteFile(nominee.image);
+    if (nominee.manifesto) deleteFile(nominee.manifesto);
+
+    // Delete nominee from DB
+    await nominee.deleteOne();
+
+    res.status(200).json({ message: "Nominee deleted successfully" });
+  } catch (err) {
+    console.error("Delete error:", err);
+    res.status(500).json({ error: "Server error while deleting nominee" });
+  }
+});
 
 module.exports = router;

@@ -12,6 +12,8 @@ const AddCandidate = () => {
     localStorage.getItem("electionStatus") === "on"
   );
   const [pdfFile, setPdfFile] = useState(null);
+  const [isUploading, setIsUploading] = useState(false);
+  const [isSavingCandidates, setIsSavingCandidates] = useState(false);
 
   useEffect(() => {
     const isLoggedIn = localStorage.getItem("isAdminLoggedIn");
@@ -31,31 +33,29 @@ const AddCandidate = () => {
     navigate("/", { replace: true });
   };
 
-  const goToResults = () => {
-    navigate("/admin/Result");
-  };
-
-  const goToManageCandidates = () => {
-    navigate("/admin/manageCandidates");
-  };
-
-  const goToNominationCandidates = () => {
-    navigate("/admin/nominationCandidate");
-  };
+  const goToResults = () => navigate("/admin/Result");
+  const goToManageCandidates = () => navigate("/admin/manageCandidates");
+  const goToNominationCandidates = () => navigate("/admin/nominationCandidate");
 
   const addPosition = () => {
-    if (currentPosition.trim() && !positions.includes(currentPosition)) {
-      setPositions([...positions, currentPosition]);
-      setCandidates({ ...candidates, [currentPosition]: [] });
+    const trimmed = currentPosition.trim();
+    const duplicate = positions.find(
+      (pos) => pos.toLowerCase() === trimmed.toLowerCase()
+    );
+    if (trimmed && !duplicate) {
+      setPositions([...positions, trimmed]);
+      setCandidates({ ...candidates, [trimmed]: [] });
       setCurrentPosition("");
+    } else if (duplicate) {
+      alert("Position already exists!");
     }
   };
 
   const removePosition = (position) => {
     setPositions(positions.filter((pos) => pos !== position));
-    const updatedCandidates = { ...candidates };
-    delete updatedCandidates[position];
-    setCandidates(updatedCandidates);
+    const updated = { ...candidates };
+    delete updated[position];
+    setCandidates(updated);
   };
 
   const addCandidate = (position) => {
@@ -94,12 +94,13 @@ const AddCandidate = () => {
         const candidateList = candidates[position];
         for (const candidate of candidateList) {
           if (!candidate.name || !candidate.image) {
-            alert(`Candidate missing name/image in position: ${position}`);
+            alert(`Missing name or image in position: ${position}`);
             return;
           }
         }
       }
 
+      setIsSavingCandidates(true);
       await axios.post("http://localhost:5000/api/candidates/add", {
         candidates,
       });
@@ -110,6 +111,8 @@ const AddCandidate = () => {
     } catch (error) {
       console.error(error);
       alert("Error submitting candidates.");
+    } finally {
+      setIsSavingCandidates(false);
     }
   };
 
@@ -127,24 +130,24 @@ const AddCandidate = () => {
     formData.append("pdf", pdfFile);
 
     try {
-      const res = await axios.post(
-        "http://localhost:5000/api/admin/uploadPDF",
-        formData,
-        {
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
-        }
-      );
+      setIsUploading(true);
+      await axios.post("http://localhost:5000/api/admin/uploadPDF", formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
       alert("PDF uploaded successfully!");
+      setPdfFile(null);
     } catch (err) {
       console.error(err);
       alert("Failed to upload PDF.");
+    } finally {
+      setIsUploading(false);
     }
   };
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen bg-gray-500 p-6">
+    <div className="flex flex-col items-center justify-center min-h-screen bg-gray-500 p-6 pt-20">
       <div className="flex justify-center gap-4 mb-6 flex-wrap">
         <button
           onClick={goToResults}
@@ -229,12 +232,22 @@ const AddCandidate = () => {
                     updateCandidate(position, index, "name", e.target.value)
                   }
                 />
-                <input
-                  type="file"
-                  accept="image/*"
-                  className="w-full px-3 py-2 border rounded-lg"
-                  onChange={(e) => handleImageUpload(position, index, e)}
-                />
+                <div className="relative">
+                  <label
+                    htmlFor={`upload-${position}-${index}`}
+                    className="absolute left-3 top-2 text-gray-400 text-sm pointer-events-none"
+                  >
+                    Upload Image
+                  </label>
+                  <input
+                    id={`upload-${position}-${index}`}
+                    type="file"
+                    accept="image/*"
+                    className="w-full px-3 pt-6 pb-2 border rounded-lg"
+                    onChange={(e) => handleImageUpload(position, index, e)}
+                  />
+                </div>
+
                 {candidate.image && (
                   <img
                     src={candidate.image}
@@ -262,9 +275,14 @@ const AddCandidate = () => {
         {positions.length > 0 && (
           <button
             onClick={handleSaveCandidates}
-            className="mt-6 px-6 py-3 bg-purple-600 text-white rounded-lg hover:bg-purple-700 w-full"
+            disabled={isSavingCandidates}
+            className={`mt-6 px-6 py-3 ${
+              isSavingCandidates
+                ? "bg-purple-400"
+                : "bg-purple-600 hover:bg-purple-700"
+            } text-white rounded-lg w-full`}
           >
-            Save All Candidates
+            {isSavingCandidates ? "Saving..." : "Save All Candidates"}
           </button>
         )}
 
@@ -273,17 +291,30 @@ const AddCandidate = () => {
           <h3 className="text-xl font-semibold mb-3">
             Upload Instructions PDF
           </h3>
-          <input
-            type="file"
-            accept="application/pdf"
-            onChange={handleFileChange}
-            className="mb-3 w-full border px-3 py-2 rounded-lg"
-          />
+          <div className="relative">
+            <label
+              htmlFor="upload-pdf"
+              className="absolute left-3 top-2 text-gray-400 text-sm pointer-events-none"
+            >
+              Upload Instructions PDF
+            </label>
+            <input
+              id="upload-pdf"
+              type="file"
+              accept="application/pdf"
+              onChange={handleFileChange}
+              className="w-full px-3 pt-6 pb-2 border rounded-lg"
+            />
+          </div>
+
           <button
             onClick={handleUploadPDF}
-            className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700"
+            disabled={isUploading}
+            className={`px-4 py-2 ${
+              isUploading ? "bg-blue-400" : "bg-blue-600 hover:bg-blue-700"
+            } text-white rounded-md`}
           >
-            Upload PDF
+            {isUploading ? "Uploading..." : "Upload PDF"}
           </button>
         </div>
       </div>

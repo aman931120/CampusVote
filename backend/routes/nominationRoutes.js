@@ -96,32 +96,14 @@ router.post(
 
 router.delete("/delete/:id", async (req, res) => {
   try {
-    const nominee = await Nominee.findById(req.params.id);
-
-    if (!nominee) {
-      return res.status(404).json({ message: "Nominee not found" });
-    }
-
-    // Function to safely delete files
-    const deleteFile = (filePath) => {
-      const absolutePath = path.join(__dirname, "..", filePath);
-      if (fs.existsSync(absolutePath)) {
-        fs.unlinkSync(absolutePath);
-      }
-    };
-
-    // Delete image and manifesto files
-    if (nominee.image) deleteFile(nominee.image);
-    if (nominee.manifesto) deleteFile(nominee.manifesto);
-
-    // Delete nominee from DB
-    await nominee.deleteOne();
-
+    const { id } = req.params;
+    await Nominee.findByIdAndDelete(id);
     res.status(200).json({ message: "Nominee deleted successfully" });
-  } catch (err) {
-    console.error("Delete error:", err);
-    res.status(500).json({ error: "Server error while deleting nominee" });
+  } catch (error) {
+    res.status(500).json({ message: "Error deleting nominee", error });
   }
 });
+
+
 
 module.exports = router;

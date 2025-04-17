@@ -92,20 +92,23 @@ app.get("/api/admin/getPDF", async (req, res) => {
 });
 
 app.get("/download", (req, res) => {
-  const filePath = req.query.file;
+  const filePath = req.query.file; // e.g., /uploads/1713299212911-manifesto.pdf
+  if (!filePath) return res.status(400).send("File path is required");
 
-  if (!filePath) {
-    return res.status(400).send("No file specified");
+  const fullPath = path.join(__dirname, filePath); // resolves absolute path
+
+  if (!fs.existsSync(fullPath)) {
+    return res.status(404).send("File not found");
   }
 
-  const absolutePath = path.join(__dirname, filePath);
-  res.download(absolutePath, (err) => {
+  res.download(fullPath, (err) => {
     if (err) {
       console.error("Download error:", err);
-      res.status(500).send("Failed to download file");
+      res.status(500).send("Error downloading file");
     }
   });
 });
+
 
 // Use routes
 app.use("/api", adminRoutes);

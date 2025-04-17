@@ -34,7 +34,7 @@ const NominationCandidate = () => {
 
     try {
       const response = await fetch(
-        `http://localhost:5000/api/nominee/delete/${id}`,
+        `http://localhost:5000/api/nomination/delete/${id}`, // <-- fixed
         {
           method: "DELETE",
         }
@@ -54,9 +54,6 @@ const NominationCandidate = () => {
       alert("Something went wrong!");
     }
   };
-
-
-
 
   return (
     <div className="min-h-screen bg-gray-700 text-white flex flex-col items-center py-10 pt-20">

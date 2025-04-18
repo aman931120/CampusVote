@@ -37,16 +37,6 @@ const Home = () => {
           </h1>
 
           <div className="grid grid-cols-2 md:grid-cols-4 gap-6 justify-center">
-            {/* Manifesto */}
-            <div className="bg-white p-4 rounded-xl shadow-md flex flex-col items-center w-32">
-              <FaFileAlt size={60} className="text-gray-800 mb-2" />
-              <Link to="/manifesto">
-                <button className="bg-red-200 text-black font-bold text-sm px-4 py-1 rounded-md hover:bg-red-300">
-                  Manifesto
-                </button>
-              </Link>
-            </div>
-
             {/* Admin */}
             <div className="bg-white p-4 rounded-xl shadow-md flex flex-col items-center w-32">
               <FaUser size={60} className="text-gray-800 mb-2" />

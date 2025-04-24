@@ -20,7 +20,6 @@ router.post("/login", async (req, res) => {
     res.status(200).json({
       message: "Login successful",
       email: student.email,
-      name: student.name,
     });
   } catch (err) {
     console.error("Login error:", err);

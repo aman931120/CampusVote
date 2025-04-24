@@ -8,7 +8,7 @@ const Student = () => {
   const navigate = useNavigate();
 
   const handleLogin = async (e) => {
-    e.preventDefault(); // prevent form reload
+    e.preventDefault(); //reload
 
     try {
       const res = await axios.post("http://localhost:5000/api/student/login", {
@@ -16,12 +16,9 @@ const Student = () => {
         password,
       });
 
-      // Save login state
       localStorage.setItem("isStudentLoggedIn", "true");
       localStorage.setItem("studentEmail", res.data.email);
-      localStorage.setItem("studentName", res.data.name);
 
-      // Redirect to StudentElection page
       navigate("/student/StudentElection");
     } catch (err) {
       alert(err.response?.data?.message || "Login failed");

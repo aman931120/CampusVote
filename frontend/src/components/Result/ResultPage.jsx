@@ -24,7 +24,7 @@ const ResultPage = () => {
   }, []);
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen bg-gray-700 p-8">
+    <div className="flex flex-col items-center justify-center min-h-screen bg-gray-700 p-8 mt-20">
       <div className="bg-white p-10 rounded-xl shadow-2xl w-full max-w-5xl">
         <h2 className="text-4xl font-extrabold text-center text-gray-900 mb-8">
           Election Results

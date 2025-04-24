@@ -16,7 +16,6 @@ import AddCandidate from "./components/Candidate/AddCandidate.jsx";
 import StudentElection from "./components/Election/StudentElection.jsx";
 import ResultPage from "./components/Result/ResultPage.jsx";
 import ManageCandidates from "./components/Candidate/ManageCandidates.jsx";
-import Manifesto from "./components/Manifesto/Manifesto.jsx";
 import NomineeLogin from "./components/Nomination/NomineeLogin.jsx";
 import InstructionPage from "./components/Instructions/Instruction.jsx";
 import NominationForm from "./components/Nomination/NominationForm.jsx";

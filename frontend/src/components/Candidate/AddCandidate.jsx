@@ -151,19 +151,19 @@ const AddCandidate = () => {
       <div className="flex justify-center gap-4 mb-6 flex-wrap">
         <button
           onClick={goToResults}
-          className="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
+          className="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-all duration-300 shadow-md hover:shadow-lg transform hover:scale-105"
         >
           View Results
         </button>
         <button
           onClick={goToManageCandidates}
-          className="px-6 py-3 bg-yellow-600 text-white rounded-lg hover:bg-yellow-700"
+          className="px-6 py-3 bg-yellow-600 text-white rounded-lg hover:bg-yellow-700 transition-all duration-300 shadow-md hover:shadow-lg transform hover:scale-105"
         >
           Manage Candidates
         </button>
         <button
           onClick={goToNominationCandidates}
-          className="px-6 py-3 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700"
+          className="px-6 py-3 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-all duration-300 shadow-md hover:shadow-lg transform hover:scale-105"
         >
           See Nominee
         </button>
@@ -171,21 +171,22 @@ const AddCandidate = () => {
           onClick={toggleElection}
           className={`px-6 py-3 ${
             electionOn ? "bg-green-600" : "bg-gray-600"
-          } text-white rounded-lg hover:opacity-90`}
+          } text-white rounded-lg hover:opacity-90 transition-all duration-300 shadow-md hover:shadow-lg transform hover:scale-105`}
         >
           {electionOn ? "Election: ON" : "Election: OFF"}
         </button>
         <button
           onClick={handleLogout}
-          className="px-6 py-3 bg-red-600 text-white rounded-lg hover:bg-red-700"
+          className="px-6 py-3 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-all duration-300 shadow-md hover:shadow-lg transform hover:scale-105"
         >
           Logout
         </button>
       </div>
 
       <div className="bg-white p-8 rounded-lg shadow-2xl w-full max-w-3xl">
-        <h2 className="text-3xl font-bold text-center text-gray-800 mb-6">
+        <h2 className="text-2xl sm:text-3xl md:text-4xl font-extrabold text-center text-[#2C3E50] mb-6 relative">
           Add Candidates
+          <span className="absolute left-0 bottom-0 w-full h-[4px] bg-gradient-to-r from-blue-600 to-cyan-400 mt-2"></span>
         </h2>
 
         <div className="flex gap-4 mb-6">
@@ -286,8 +287,11 @@ const AddCandidate = () => {
           </button>
         )}
 
+        
+
         {/* PDF Upload Section */}
         <div className="mt-10 border-t pt-6">
+          
           <h3 className="text-xl font-semibold mb-3">
             Upload Instructions PDF
           </h3>
@@ -310,7 +314,7 @@ const AddCandidate = () => {
           <button
             onClick={handleUploadPDF}
             disabled={isUploading}
-            className={`px-4 py-2 ${
+            className={`px-4 mt-2 py-2 ${
               isUploading ? "bg-blue-400" : "bg-blue-600 hover:bg-blue-700"
             } text-white rounded-md`}
           >
